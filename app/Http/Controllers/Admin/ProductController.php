@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Image;
+use App\Models\Category;
 use Auth;
 
 class ProductController extends Controller
@@ -34,8 +35,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
-        return view('admin.products.create');
+        $categories = Category::all();
+
+        return view('admin.products.create',compact('categories'));
     }
 
     /**
@@ -59,6 +61,26 @@ class ProductController extends Controller
         $product->name = $request->post('name');
         $product->price = $request->post('price');
         $product->description = $request->post('description');
+        
+        if ($request->hasFile('images'))
+        {
+            foreach ($request->file('images') as $idx => $file)
+            {
+                if($idx == 0)
+                {
+                    $product->image_url = $file->getClientOriginalName();
+                }
+            }
+        }
+        if($request->filled('category'))
+        {
+            $product->category_id = $request->post('category');
+        }
+        else
+        {
+            $product->category_id = 0;
+        }
+
         $product->save();
 
          if ($request->hasFile('images')) {
@@ -99,7 +121,8 @@ class ProductController extends Controller
     public function edit($id)
     {
         //fungsi edit untuk mengambil data ecommerce sesuai id yang dipilih
-        $products=Product::find($id);
+        $categories = Category::all();
+        //$products=Product::find($id);
         return view('admin.products.edit',compact('products'));
 
     }
@@ -125,6 +148,26 @@ class ProductController extends Controller
         $product->name = $request->get('name');
         $product->price = $request->get('price');
         $product->description = $request->get('description');
+
+        if ($request->hasFile('images'))
+        {
+            foreach ($request->file('images') as $idx => $file)
+            {
+                if($idx == 0)
+                {
+                    $product->image_url = $file->getClientOriginalName();
+                }
+            }
+        }
+        if($request->filled('category'))
+        {
+            $product->category_id = $request->post('category');
+        }
+        else
+        {
+            $product->category_id = 0;
+        }
+
         $product->save();
 
         if ($request->hasFile('images')) {

@@ -17,9 +17,17 @@ class PublicController extends Controller
      */
     public function index(Request $request)
     {
-        //
         $productInstance = new Product();
-        $products=$productInstance->orderProducts($request->get('order_by'));
+        $orderby=$request->get('order_by');
+        $products=$productInstance->orderProducts($orderby);
+        // $products=$productInstance->orderProducts($request->get('order_by'));
+
+        //apabila request ajax maka return json
+        if($request->ajax()){
+            return response()->json($products, 200);
+        }
+
+        // apabila request HTML maka akan return HTML
         return view('public', compact('products'));
     }
 
@@ -48,8 +56,10 @@ class PublicController extends Controller
 
         $review = new Product_Review();
         $review->user_id = $request->post('user_id');
+        $review->product_id = $request->post('product_id');
         $review->description = $request->post('description');
         $review->rating = $request->post('rating');
+
         $review->save();
         
         return back();
@@ -65,7 +75,8 @@ class PublicController extends Controller
     {
         //
         $products = Product::find($id);
-        $reviews = Product_Review::all();
+        $reviews = Product_Review::where('product_id',$products->id)->get();
+
         return view('show',compact('products','reviews'));
     }
 

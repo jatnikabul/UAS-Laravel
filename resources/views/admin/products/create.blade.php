@@ -38,6 +38,15 @@
 					<script src="{{url('plugins/tinymce/tinymce.min.js')}}"></script>
 					<script>tinymce.init({ selector:'#ckview' });</script>
 				</div>
+				<div class="from-group mt-4">
+					<label for="category">Categori</label>
+					<select name="category" class="form-control">
+					<option disabled selected>Pilih category...</option>
+					@foreach($categories as $category)
+						<option value="{{$category->id}}">{{$category->name}}</option>
+					@endforeach
+					</select>					
+				</div>
 				<br>
 				 <div class="form-group">
                     <label for="images">Images</label>
