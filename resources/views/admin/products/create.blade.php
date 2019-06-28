@@ -30,6 +30,10 @@
 					<label>Harga</label>
 					<input type="number" name="price" class="form-control" placeholder="Harga">
 				</div>
+				<div class="from-group">
+					<label>Stok</label>
+					<input type="number" name="stock" class="form-control" placeholder="Harga">
+				</div>
 				<br>
 				<div class="from-group">
 					<label>Deskripsi</label>
@@ -39,9 +43,9 @@
 					<script>tinymce.init({ selector:'#ckview' });</script>
 				</div>
 				<div class="from-group mt-4">
-					<label for="category">Categori</label>
+					<label for="category">Category</label>
 					<select name="category" class="form-control">
-					<option disabled selected>Pilih category...</option>
+					<option hidden>Choose Category..</option>
 					@foreach($categories as $category)
 						<option value="{{$category->id}}">{{$category->name}}</option>
 					@endforeach
@@ -52,7 +56,7 @@
                     <label for="images">Images</label>
                     <input type="file" class="form-control-file" name="images[]" multiple>
 	             </div>
-				<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+				<button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
 				<a href="{{ route('admin.products.index') }}" class="btn btn-primary"><i class="fas fa-undo"></i> Back</a>
 			</form>
 		</div>

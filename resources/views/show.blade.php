@@ -275,7 +275,7 @@
 							<button type="submit" class="btn btn-primary"><i class="fas fa-comment-dots"></i> Compose</button>
 						</form>
 						@else
-						Login untuk menulis Review
+						Silahkan log in untuk review
 						<br>
 						@endif
 

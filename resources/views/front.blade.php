@@ -7,20 +7,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- <title>{{ config('app.name', 'Laravel') }}</title> -->
-    <title>STAY GAMES</title>
-    @include('layouts.script')
+    <title>STAYGAMES</title>
 
-    <!-- Scripts -->
-
-    <!-- Fonts -->
-    <!-- <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css"> -->
-
-    <!-- <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
-
-    <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
@@ -28,10 +17,10 @@
 </head>
 <body>
     <div id="app">
-      <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top ">
+      <nav class="navbar navbar-expand-md navbar-primary bg-light sticky-top ">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    STAY GAMES
+                STAY GAMES
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -120,8 +109,48 @@
         </nav>
 
         <main class="py-4">
+        <div class="container mt-4">
+    <div class="row ml-4">
+        <div class="col-md-3">
+            <div class="form-group">
+                <form action="{{url('/')}}">
+                    <select class="custom-select mr-sm-2" id="categories" name="filter_category">
+                        <option hidden>Choose Category...</option>
+                        @foreach($category as $c)
+                        <option value="{{$c->id}}">{{$c->name}}</option>
+                        @endforeach                       
+                    </select>
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-md-4 ">
+                <div class="form-group">
+                <form action="{{url('/')}}">
+                    <select name="sorting" id="sorting" class="form-control">
+                        <option hidden> Sort By</option>
+                        <option value="best_seller">Best Seller</option>
+                        <option value="terbaik">Terbaik</option>
+                        <option value="termurah">Termurah</option>
+                        <option value="termahal">Termahal</option>
+                        <option value="terbaru">Terbaru</option>
+                        <option value="dilihat">Banyak Dilihat</option>
+
+                    </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container">
+
             @yield('content')
+            </div>
+</div>
         </main>
     </div>
+    @include('layouts.script')
+
 </body>
 </html>

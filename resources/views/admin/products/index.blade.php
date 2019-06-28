@@ -1,64 +1,47 @@
-@extends('layouts.app')
-
+@extends('admin.products.front')
 @section('content')
-<div class="container col-md-8">
-	<div class="row justify-content-center">
-		<div class="col">
-			<br>
-			<h2>List Product</h2>
-			<div>
-				<a href="{{ route('admin.products.create') }}" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tambah Produk</a>
-			</div>
-			<br>
-			@if($message = Session::get('success'))
-			<div class="alert alert-success">
-				<p>{{ $message }}</p>
-			</div>
-			@endif
-			<div class="table-responsive">
-				<table class="table table-striped table-sm">
-					<thead class="thead-dark">
-						<tr>
-							<th>No</th>
-							<th>Name</th>
-							<th>Price</th>
-							<th>Created at</th>
-							<th colspan="3">Action</th>
-						</tr>
-					</thead>
-					<tbody class="tbody-light">
-						@foreach($products as $product)
-						<tr>
-							<td>{{ $product['id'] }}</td>
-							<td>{{ $product['name'] }}</td>
-							<td>Rp. {{ $product['price'] }}</td>
-							<td>{{ $product['created_at'] }}</td>
-							<td width="5%">
-								<a class="btn btn-warning" href="{{ route('admin.products.edit',$product->id) }}"><i class="fas fa-sync"></i> Edit</a>
-							</td>	
-							<td width="5%">
-								<a class="btn btn-success" href="{{ route('admin.products.show',$product->id) }}"><i class="far fa-eye"></i> Detail</a>
-							</td>
-							<td>
-								<form action="{{ route('admin.products.destroy', $product->id)}}" method="post">
-                				  @csrf
-                				  @method('DELETE')
-                				  <button class="btn btn-danger" onclick="return confirm('Are you sure?')" type="submit"><i class="fas fa-trash-alt"></i> Delete</button>
-                				
-                				</form>
-								<!-- <a class="btn btn-primary" href="{{ route('admin.products.destroy',$product->id) }}">Delete</a> -->
-							</td>
-						</tr>
-						@endforeach
-					</tbody>
-					
-				</table>
-				
-			</div>
+<section class="page">
 			
-		</div>
-		
-	</div>
+					<table class="table table-striped table-sm">
+						<thead class="thead-dark">
+							<tr>
+								<th>No</th>
+								<th>Name</th>
+								<th>Price</th>
+								<th>Created at</th>
+								<th colspan="3">Action</th>
+							</tr>
+						</thead>
+
+						<tbody class="tbody-light">
 	
-</div>
+							@foreach($products as $product)
+							<tr>
+								<td>{{ $product['id'] }}</td>
+								<td>{{ $product['name'] }}</td>
+								<td>Rp. {{ number_format($product->price,2) }}</td>
+								<td>{{ $product['created_at'] }}</td>
+								<td width="5%">
+									<a class="btn btn-primary" href="{{ route('admin.products.edit',$product->id) }}"><i class="fas fa-sync"></i> Edit</a>
+								</td>	
+								<td width="5%">
+									<a class="btn btn-primary" href="{{ route('admin.products.show',$product->id) }}"><i class="far fa-eye"></i> Detail</a>
+								</td>
+								<td>
+									<form action="{{ route('admin.products.destroy', $product->id)}}" method="post">
+									@csrf
+									@method('DELETE')
+									<button class="btn btn-primary" onclick="return confirm('Are you sure?')" type="submit"><i class="fas fa-trash-alt"></i> Delete</button>
+									
+									</form>
+									<!-- <a class="btn btn-primary" href="{{ route('admin.products.destroy',$product->id) }}">Delete</a> -->
+								</td>
+							</tr>
+							@endforeach
+						</tbody>
+					</table>
+					{{$products->links()}}
+					</section>
+
+					
 @endsection

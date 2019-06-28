@@ -42,8 +42,8 @@
 							<td>{{ $order['id'] }}</td>
 							<td>Rp. {{ $order['total_price'] }}</td>
 							<td>{{ $order['status'] }}</td>
-							<td>{{ $order['zip_code'] }}</td>
-							<td>{{ $order['shipping_address'] }}</td>
+							<td>{{ $order['zip'] }}</td>
+							<td>{{ $order['address'] }}</td>
 							<td>
 								<a class="btn btn-success btn-sm" href="{{ route('admin.orders.show' , $order->id) }}"><i class="far fa-eye"></i> Detail</a>
 							</td>

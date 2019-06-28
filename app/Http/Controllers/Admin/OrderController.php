@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Auth;
 
 class OrderController extends Controller
@@ -52,11 +53,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate(request(), 
-        [
-            'shipping_address' => 'required',
-            'zip_code' => 'required'
-        ]);
 
         $cart = session()->get('cart');
         $total_price = 0;
@@ -64,15 +60,29 @@ class OrderController extends Controller
         {
             $total_price += $product['price'] * $product['quantity'];
         }
-
+        
         $order = new Order();
         $order->user_id = Auth::user()->id;
         $order->status = 'PENDING';
-        $order->shipping_address = $request->post('shipping_address');
-        $order->zip_code = $request->post('zip_code');
+        $order->total_price = $request->input('total_price');
+        $order->name = $request->input('name');
+        $order->telp = $request->input('telp');
+        $order->address = $request->input('address');
+        $order->kec = $request->input('kec');
+        $order->city = $request->input('city');
+        $order->province = $request->input('province');
+        $order->zip = $request->input('zip');
         $order->total_price = $total_price;
         $order->save();
-
+        foreach($cart as $id => $product)
+        {
+            $s = 0;
+            $sold = $product['stock'];
+            $totalSold = $sold - $product['quantity'];
+            $p = Product::findOrFail($id);
+            $p->sold = $totalSold;
+            $p->save();
+        }
         foreach($cart as $id => $product)
         {
             $orderItem = new OrderItem();

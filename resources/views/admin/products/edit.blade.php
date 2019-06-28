@@ -33,6 +33,11 @@
 				</div>
 				<br>
 				<div class="from-group">
+					<label>Stook</label>
+					<input type="number" name="stock" class="form-control" placeholder="Harga">
+				</div>
+				<br>
+				<div class="from-group">
 					<label>Deskripsi</label>
 					<textarea name="description" id="ckview">{{ $products->description }} </textarea>
 					<script src="{{url('plugins/tinymce/jquery.tinymce.min.js')}}"></script>
@@ -40,11 +45,27 @@
 					<script>tinymce.init({ selector:'#ckview' });</script>
 				</div>
 				<br>
+				<div class="from-group mt-4">
+					<label for="category">Category</label>
+					<select name="category" class="form-control">
+						<option hidden value="{{$products->category()->first()->id}}">{{$products->category()->first()->name}}</option>
+					@foreach($categories as $category)
+						<option value="{{$category->id}}">{{$category->name}}</option>
+					@endforeach
+					</select>					
+				</div>
+				
+				<br>
 				<div class="form-group">
+				@foreach($products->images()->get() as $i)
+					<img src="{{url('images/', $i->image_src)}}" style="width:100px;height:100px;">
+				@endforeach
+				<br>
                                 <label for="images">Images</label>
                                 <input type="file" class="form-control-file" name="images[]" id="images" multiple>
+								ingin merubah foto?
                 </div>
-				<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+				<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
 				<a href="{{ route('admin.products.index') }}" class="btn btn-primary"><i class="fas fa-undo"></i> Back</a>
 			</form>
 		</div>

@@ -176,7 +176,7 @@
                     <div class="hs-content">
                         <div class="price">from $19.90</div>
                         <h2><span>2018</span> <br>summer collection</h2>
-                        <a href="" class="site-btn">Shop NOW!</a>
+                        <a href="" class="site-btn">BUY!</a>
                     </div>  
                 </div>
             </div>
@@ -186,7 +186,7 @@
                     <div class="hs-content">
                         <div class="price">from $19.90</div>
                         <h2><span>2018</span> <br>summer collection</h2>
-                        <a href="" class="site-btn">Shop NOW!</a>
+                        <a href="" class="site-btn">!</a>
                     </div>  
                 </div>
             </div>
@@ -616,13 +616,13 @@
     <footer class="footer-section">
         <div class="container">
             <p class="copyright">
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0.
 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 </p>
         </div>
     </footer>
-    <!-- Footer section end -->
+    Footer section end -->
 
 
     <!--====== Javascripts & Jquery ======-->

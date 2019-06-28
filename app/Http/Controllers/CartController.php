@@ -41,6 +41,8 @@ class CartController extends Controller
                 [
                     "name" => $product->name,
                     "quantity" => 1,
+                    "stock"=> $product->stock,
+                    "sold" => $product->sold,
                     "price" => $product->price,
                     "image_url" => $product->images()->first()->image_src
                 ]
@@ -64,7 +66,9 @@ class CartController extends Controller
         [
             "name" => $product->name,
             "quantity" => 1,
+            "stock"=> $product->stock,
             "price" => $product->price,
+            "sold" => $product->sold,
             "image_url" => $product->images()->first()->image_src
         ];
 

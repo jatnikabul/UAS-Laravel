@@ -35,7 +35,7 @@ Route::get('public', 'PublicController@index');
 Route::get('show/{id}', 'PublicController@show');
 Route::get('public/image/{imageName}','PublicController@image');
 
-Route::post('review/store','PublicController@store')->name('review.store');
+Route::post('review','PublicController@store')->name('review.store');
 
 Route::get('carts','CartController@index')->name('carts.index');
 Route::get('carts/add/{id}','CartController@add')->name('carts.add');

@@ -8,13 +8,11 @@ class Image extends Model
 {
     //
      protected $fillable = [
-        'image_title',
         'image_src',
-        'image_desc',
     ];
 
     public function product()
     {
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsToMany('App\Models\Product','product_images');
     }
 }

@@ -16,16 +16,40 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function index(Request $request){
+        $products=Product::where(['user_id' => Auth::user()->id])->paginate(10);
+        $sortingBy = $request->input('sortingBy');
+        if($sortingBy == 'best_seller'){
+            $products=Product::where(['user_id' => Auth::user()->id])
+            ->withCount('review')->orderBy('review_count','desc')
+            ->paginate(10);
+        }elseif($sortingBy =='terbaik'){
+            $products=Product::where(['user_id' => Auth::user()->id])
+            ->orderBy('sold','desc')
+            ->paginate(10);
+        }elseif($sortingBy == 'termurah'){
+            $products=Product::where(['user_id' => Auth::user()->id])
+            ->orderBy('price','asc')
+            ->paginate(10);
+        }elseif($sortingBy == 'termahal'){
+            $products=Product::where(['user_id' => Auth::user()->id])
+            ->orderBy('price','desc')
+            ->paginate(10);
+        }elseif($sortingBy == 'terbaru'){
+            $products=Product::where(['user_id' => Auth::user()->id])
+            ->orderBy('created_at','desc')
+            ->paginate(10);
+        }elseif($sortingBy == 'dilihat'){
+            $products=Product::where(['user_id' => Auth::user()->id])
+            ->orderBy('view_count','desc')
+            ->paginate(10);
+        }
+        if($request->ajax()){
+            return view('admin.products.index', compact('products'))->renderSections()['content'];
+        }else{
+            return view('admin.products.index', compact('products'));
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    public function index()
-    {
-        $products=Product::where('user_id', "=", Auth::user()->id)->get();
-        return view('admin.products.index', compact('products'));
+        }
     }
 
     /**
@@ -53,49 +77,24 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'description' => 'required',
         ]);
-
-
-        //funsi store
         $product = new Product();
         $product->user_id = Auth::user()->id;
-        $product->name = $request->post('name');
-        $product->price = $request->post('price');
-        $product->description = $request->post('description');
+        $product->name = $request->input('name');
+        $product->price = $request->input('price');
+        $product->stock = $request->input('stock');
+        $product->description = $request->input('description');
         
-        if ($request->hasFile('images'))
-        {
-            foreach ($request->file('images') as $idx => $file)
-            {
-                if($idx == 0)
-                {
-                    $product->image_url = $file->getClientOriginalName();
-                }
-            }
-        }
-        if($request->filled('category'))
-        {
-            $product->category_id = $request->post('category');
-        }
-        else
-        {
-            $product->category_id = 0;
-        }
-
         $product->save();
-
+        $category = $request->input('category');
+        $product->category()->attach($category);
          if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $image = new Image();
-                $image->image_title = $product->name;
                 $image->image_src = $file->getClientOriginalName();
-                $image->image_desc = $product->description;
                 $product->images()->save($image);
                 $file->move(public_path().'/images', $image->image_src);
             }
         }
-
-
-
         return redirect('admin/products')->with('success', 'Produk berhasil di simpan');
     }
 
@@ -108,7 +107,10 @@ class ProductController extends Controller
     public function show($id)
     {
         //fungsi show sesuai id yang di pilih
-        $products = Product::find($id);
+        $products = Product::findOrFail($id);
+        
+        $products->view_count += 1;
+        $products->save();
         return view('admin.products.show',compact('products'));
     }
 
@@ -122,8 +124,8 @@ class ProductController extends Controller
     {
         //fungsi edit untuk mengambil data ecommerce sesuai id yang dipilih
         $categories = Category::all();
-        //$products=Product::find($id);
-        return view('admin.products.edit',compact('products'));
+        $products=Product::find($id);
+        return view('admin.products.edit',compact('categories','products'));
 
     }
 
@@ -142,40 +144,17 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'description' => 'required',
         ]);
-
-        //fungsi update
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
         $product->name = $request->get('name');
         $product->price = $request->get('price');
         $product->description = $request->get('description');
-
-        if ($request->hasFile('images'))
-        {
-            foreach ($request->file('images') as $idx => $file)
-            {
-                if($idx == 0)
-                {
-                    $product->image_url = $file->getClientOriginalName();
-                }
-            }
-        }
-        if($request->filled('category'))
-        {
-            $product->category_id = $request->post('category');
-        }
-        else
-        {
-            $product->category_id = 0;
-        }
-
+        $product->category()->sync($request->get('category'));
         $product->save();
-
         if ($request->hasFile('images')) {
+            $product->images()->delete();
             foreach ($request->file('images') as $file) {
                 $image = new Image();
-                $image->image_title = $product->name;
                 $image->image_src = $file->getClientOriginalName();
-                $image->image_desc = $product->description;
                 $product->images()->save($image);
                 $file->move(public_path().'/images', $image->image_src);
             }

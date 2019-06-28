@@ -8,19 +8,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- <title>{{ config('app.name', 'Laravel') }}</title> -->
-    <title>STAY GAMES</title>
-    @include('layouts.script')
-
-    <!-- Scripts -->
-
-    <!-- Fonts -->
-    <!-- <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css"> -->
-
-    <!-- <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <title>STAYGAMES</title>
+    
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
-
-    <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
@@ -31,7 +21,7 @@
       <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top ">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    STAY GAMES
+                STAY GAMES
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -120,8 +110,45 @@
         </nav>
 
         <main class="py-4">
+        <div class="container col-md-8">
+	<div class="row justify-content-center">
+			<br>
+			<h2>List Product</h2>
+			<br>
+	</div>
+			<div class="row justify-content-center">
+				@if($message = Session::get('success'))
+				<div class="alert alert-success">
+					<p>{{ $message }}</p>
+				</div>
+				@endif
+				<div class="col">
+					<a href="{{ route('admin.products.create') }}" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Tambah Produk</a>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<form action="{{route('admin.products.index')}}">
+							<select id="sortingBy" name="sortingBy" class="form-control">
+								<option hidden>Sort By</option>
+								<option value="best_seller">Best Seller</option>
+								<option value="terbaik">Terbaik</option>
+								<option value="termurah">Terbaru</option>
+								<option value="termahal">Termahal</option>
+                                <option value="terbaru">Termurah</option>
+                                <option value="dilihat">Paling banyak dilihat</option>
+							</select>
+						</form>
+					</div>
+				</div>
+
             @yield('content')
+            </div>
+	
+    </div>
+    
         </main>
     </div>
+    @include('layouts.script')
+
 </body>
 </html>

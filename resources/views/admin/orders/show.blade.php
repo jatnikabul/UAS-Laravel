@@ -14,15 +14,31 @@
 			<br>
 			<div class="table-responsive">
 				<table class="table table-hover h5">
+					
+					<tr>
+						<td width="20%">Status</td>
+						<td width="2%">:</td>
+						<td>{{ $order->status }}</td>
+					</tr>
+					<tr>
+						<td width="20%">name</td>
+						<td width="2%">:</td>
+						<td>{{ $order->name }}</td>
+					</tr>
+					<tr>
+						<td width="20%">telp</td>
+						<td width="2%">:</td>
+						<td>{{ $order->telp }}</td>
+					</tr>
 					<tr>
 						<td width="20%">Alamat Pengiriman</td>
 						<td width="2%">:</td>
-						<td>{{ $order->shipping_address }}</td>
+						<td>{{ $order->address }}</td>
 					</tr>
 					<tr>
 						<td>Kode Pos</td>
 						<td>:</td>
-						<td>{{ $order->zip_code }}</td>
+						<td>{{ $order->zip }}</td>
 					</tr>
 					<tr>
 						<td>Harga Total</td>
@@ -51,7 +67,7 @@
 						<td data-th="Product">
 							<div class="row">
 								<div class="col-sm-3 hidden-xs">
-									<img src="{{ asset('/images/'. $orderItem->product->images->first()->image_src) }}">
+									<img style="width:100px; height:100px"  src="{{ asset('/images/'. $orderItem->product->images->first()->image_src) }}">
 								</div>
 								<div class="col-sm-9">
 									<a href="{{ url('show',$orderItem->product->id) }}"><h4 class="nomargin">{{ $orderItem->product->name }}</h4></a>

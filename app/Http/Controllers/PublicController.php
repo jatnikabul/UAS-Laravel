@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Image;
-use App\Models\Product_Review;
+use App\Review;
 use Auth;
+use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
@@ -17,18 +19,40 @@ class PublicController extends Controller
      */
     public function index(Request $request)
     {
-        $productInstance = new Product();
-        $orderby=$request->get('order_by');
-        $products=$productInstance->orderProducts($orderby);
-        // $products=$productInstance->orderProducts($request->get('order_by'));
-
-        //apabila request ajax maka return json
-        if($request->ajax()){
-            return response()->json($products, 200);
+        $product= Product::paginate(24);
+        $category = Category::all();
+        $filter_category = $request->get('filter_category');
+        if($filter_category){
+            $product = Product::with('category')->whereHas('category', function($a) use ($filter_category){
+                $a->where('category_id', $filter_category);
+            })->paginate(10);
+        }
+        $sorting = $request->get('sorting');
+        if($sorting == "best_seller"){
+            $product=Product::withCount('review')->orderBy("review_count","desc")
+            ->paginate(10);
+        }elseif($sorting =="terbaik"){
+            $product=Product::orderBy("sold","desc")
+            ->paginate(10);
+        }elseif($sorting =="termurah"){
+            $product=Product::orderBy('price','asc')
+            ->paginate(10);
+        }elseif($sorting =="termahal"){
+            $product=Product::orderBy('price','desc')
+            ->paginate(10);
+        }elseif($sorting=="terbaru"){
+            $product=Product::orderBy('created_at','desc')
+            ->paginate(10);
+        }elseif($sorting=="dilihat"){
+            $product=Product::orderBy('view_count','desc')
+            ->paginate(10);
         }
 
-        // apabila request HTML maka akan return HTML
-        return view('public', compact('products'));
+        if($request->ajax()){
+            return view('public', compact('category','product'))->renderSections()['content'];    
+        }else{
+           return view('public',compact('category','product'));
+        }
     }
 
     /**
@@ -53,16 +77,14 @@ class PublicController extends Controller
             'rating' => 'required',
             'description' => 'required|max:255',
         ]);
-
-        $review = new Product_Review();
-        $review->user_id = $request->post('user_id');
-        $review->product_id = $request->post('product_id');
-        $review->description = $request->post('description');
-        $review->rating = $request->post('rating');
-
+        $review = new Review();
+        $review->user_id = Auth::user()->id;
+        $review->description = $request->input('description');
+        $review->rating = $request->input('rating');
         $review->save();
-        
-        return back();
+        $id = $request->get('idproduct');
+        $review->product()->attach($id);
+        return redirect('/');
     }
 
     /**
@@ -73,11 +95,10 @@ class PublicController extends Controller
      */
     public function show($id)
     {
-        //
-        $products = Product::find($id);
-        $reviews = Product_Review::where('product_id',$products->id)->get();
+        $reviews = Review::all();
+        $products = Product::findOrFail($id);
 
-        return view('show',compact('products','reviews'));
+        return view('show',compact('products','review','views'));
     }
 
     /**
